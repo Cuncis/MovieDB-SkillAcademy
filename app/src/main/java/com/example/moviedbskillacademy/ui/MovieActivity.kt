@@ -22,8 +22,17 @@ class MovieActivity : DaggerAppCompatActivity(), MovieView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
+        movieAdapter = MovieAdapter(this)
+        rv_movie.layoutManager = LinearLayoutManager(this)
+        rv_movie.setHasFixedSize(true)
+        rv_movie.adapter = movieAdapter
 
         presenter.discoverMovie()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDetach()
     }
 
     override fun showLoading() {
@@ -35,10 +44,6 @@ class MovieActivity : DaggerAppCompatActivity(), MovieView {
     }
 
     override fun onResponse(result: ArrayList<Movie>) {
-        movieAdapter = MovieAdapter(this)
-        rv_movie.layoutManager = LinearLayoutManager(this)
-        rv_movie.setHasFixedSize(true)
-        rv_movie.adapter = movieAdapter
         movieAdapter.setMovieList(result)
     }
 
